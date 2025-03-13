@@ -6,13 +6,16 @@ const rightArrow = document.querySelector(".right-arrow");
 const navButtons = document.querySelectorAll(".nav button");
 const carouselWidth = carousel.offsetWidth;
 const carouselContent = carousel.querySelector(".content");
+let autoSlideTimeout;
 
 let carouselCurrentPageNumber = 0;
 
 function displayPage(numPage) {
-  const newPageIndex = Number(numPage);
-  if (newPageIndex < 0 || navButtons.length <= newPageIndex) {
-    return;
+  let newPageIndex = Number(numPage);
+  if (newPageIndex < 0) {
+    newPageIndex = navButtons.length - 1;
+  } else if (navButtons.length <= newPageIndex) {
+    newPageIndex = 0;
   }
 
   navButtons[carouselCurrentPageNumber].classList.toggle("current");
@@ -29,8 +32,24 @@ navButtons.forEach((button) => {
 
 leftArrow.addEventListener("click", () => {
   displayPage(carouselCurrentPageNumber - 1);
+  restartAutoSlide();
 });
 
 rightArrow.addEventListener("click", () => {
   displayPage(carouselCurrentPageNumber + 1);
+  restartAutoSlide();
 });
+
+function autoSlide() {
+  autoSlideTimeout = setTimeout(() => {
+    displayPage(carouselCurrentPageNumber + 1);
+    autoSlide();
+  }, 3000);
+}
+
+function restartAutoSlide() {
+  clearTimeout(autoSlideTimeout);
+  autoSlide();
+}
+
+autoSlide();
