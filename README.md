@@ -1,1 +1,1 @@
-# node-webpack-template
+# image-carousel-example
